@@ -20,8 +20,8 @@ This is the frontend application for the Event Registration system. It's built w
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/username/event-registration-frontend.git
-cd event-registration-frontend
+git clone git@github.com:naeem4265/sslcommerz-integration-frontend.git
+cd sslcommerz-integration-frontend
 npm install
 ```
 
