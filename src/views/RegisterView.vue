@@ -75,30 +75,15 @@
           <p>Registration Fee: 1000 BDT</p>
         </div>
 
-        <div class="payment-options">
-          <h3>Choose Payment Method</h3>
-          <div class="payment-methods">
-            <div 
-              v-for="method in paymentMethods" 
-              :key="method.id"
-              class="payment-method"
-              :class="{ active: selectedMethod === method.id }"
-              @click="selectPaymentMethod(method.id)"
-            >
-              <img :src="method.icon" :alt="method.name" />
-              <span>{{ method.name }}</span>
-            </div>
-          </div>
-
-          <div class="payment-action">
-            <button 
-              @click="processPayment" 
-              class="submit-btn" 
-              :disabled="!selectedMethod || isProcessing"
-            >
-              {{ isProcessing ? 'Processing...' : 'Pay Now' }}
-            </button>
-          </div>
+        <div class="payment-action">
+          <p class="payment-info">Click below to proceed to the secure payment gateway</p>
+          <button 
+            @click="processPayment" 
+            class="submit-btn" 
+            :disabled="isProcessing"
+          >
+            {{ isProcessing ? 'Processing...' : 'Pay Now' }}
+          </button>
         </div>
       </div>
 
@@ -117,11 +102,10 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import axios from 'axios'
+import axios from '@/plugins/axios'
 
 const currentStep = ref('form')
 const isProcessing = ref(false)
-const selectedMethod = ref('')
 
 const formData = reactive({
   name: '',
@@ -130,29 +114,6 @@ const formData = reactive({
   batch: '',
   department: ''
 })
-
-const paymentMethods = [
-  {
-    id: 'bkash',
-    name: 'bKash',
-    icon: '/images/bkash.png'
-  },
-  {
-    id: 'nagad',
-    name: 'Nagad',
-    icon: '/images/nagad.png'
-  },
-  {
-    id: 'rocket',
-    name: 'Rocket',
-    icon: '/images/rocket.png'
-  },
-  {
-    id: 'card',
-    name: 'Credit/Debit Card',
-    icon: '/images/card.png'
-  }
-]
 
 const handleSubmit = () => {
   // Validate form data
@@ -163,51 +124,27 @@ const handleSubmit = () => {
   currentStep.value = 'payment'
 }
 
-const selectPaymentMethod = (methodId: string) => {
-  selectedMethod.value = methodId
-}
-
 const processPayment = async () => {
-  if (!selectedMethod.value) {
-    alert('Please select a payment method')
-    return
-  }
-
   isProcessing.value = true
   try {
     // Generate a unique transaction ID
-    const transactionId = 'THPI' + Date.now()
+    const transactionId = 'cd645e2c-1678-4603-b5ca-12326d1e0681'
 
     // Prepare payment data
     const paymentData = {
-      total_amount: 1000,
-      currency: 'BDT',
-      tran_id: transactionId,
-      success_url: `${window.location.origin}/payment/success`,
-      fail_url: `${window.location.origin}/payment/fail`,
-      cancel_url: `${window.location.origin}/payment/cancel`,
-      shipping_method: 'No',
-      product_name: 'THPI Get Together Registration',
-      product_category: 'Event',
-      product_profile: 'general',
-      cus_name: formData.name,
-      cus_email: formData.email,
-      cus_phone: formData.phone,
-      cus_add1: 'Thakurgaon',
-      cus_city: 'Thakurgaon',
-      cus_country: 'Bangladesh',
-      preferred_method: selectedMethod.value
+      registrationId: transactionId,
+      amount: 1000,
     }
 
     // Call your backend API to initiate payment
-    const response = await axios.post('your_backend_api/init-payment', {
+    const response = await axios.post('/api/v1/payment/initiate', {
       ...paymentData,
       registration: formData
     })
 
     // Redirect to SSLCommerz payment gateway
-    if (response.data.redirectGatewayURL) {
-      window.location.href = response.data.redirectGatewayURL
+    if (response.data.paymentUrl !== undefined) {
+      window.location.href = response.data.paymentUrl
     } else {
       throw new Error('Payment initialization failed')
     }
@@ -280,40 +217,6 @@ h1, h2, h3 {
   cursor: not-allowed;
 }
 
-.payment-methods {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin: 2rem 0;
-}
-
-.payment-method {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.payment-method.active {
-  border-color: #42b983;
-  background-color: #f0faf5;
-}
-
-.payment-method img {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  margin-bottom: 0.5rem;
-}
-
-.payment-method span {
-  display: block;
-  margin-top: 0.5rem;
-  color: #2c3e50;
-}
-
 .payment-amount {
   text-align: center;
   font-size: 1.2rem;
@@ -325,6 +228,12 @@ h1, h2, h3 {
 
 .payment-action {
   margin-top: 2rem;
+  text-align: center;
+}
+
+.payment-info {
+  color: #666;
+  margin-bottom: 1rem;
 }
 
 .confirmation-section {
