@@ -252,7 +252,7 @@ const processPayment = async () => {
 }
 
 .register-card {
-  max-width: 800px;
+  max-width: 1000px;
   width: 100%;
   margin: 0 auto;
 }
@@ -266,17 +266,19 @@ const processPayment = async () => {
 }
 
 .p-field {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .p-field label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   font-weight: 500;
+  font-size: 1.1rem;
 }
 
 .p-inputtext-lg, .p-button-lg {
   width: 100%;
+  font-size: 1.1rem;
 }
 
 .payment-amount {

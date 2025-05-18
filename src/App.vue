@@ -8,12 +8,6 @@
         </router-link>
         <div class="nav-links">
           <PButton 
-            label="Register" 
-            icon="pi pi-user-plus" 
-            class="p-button-success" 
-            @click="router.push('/register')"
-          />
-          <PButton 
             label="Admin" 
             icon="pi pi-lock" 
             class="p-button-text" 
@@ -87,6 +81,9 @@ const router = useRouter();
 
 main {
   padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .fade-enter-active,
