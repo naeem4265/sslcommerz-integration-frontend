@@ -97,6 +97,7 @@ const router = useRouter()
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
               url('/images/campus.jpg') center/cover;
   height: 80vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,14 +123,16 @@ const router = useRouter()
   opacity: 0.9;
 }
 
-.info-section {
-  padding: 5rem 2rem;
-  background-color: var(--surface-ground);
+.container {
+  max-width: 100%;
+  width: 100%;
+  padding: 0 2rem;
+  margin: 0 auto;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+.info-section {
+  padding: 5rem 0;
+  background-color: var(--surface-ground);
 }
 
 .section-header {
@@ -153,8 +156,9 @@ const router = useRouter()
 
 .event-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
+  padding: 0 2rem;
 }
 
 .event-card {
@@ -196,7 +200,7 @@ const router = useRouter()
 .cta-section {
   background-color: var(--primary-color);
   color: white;
-  padding: 4rem 2rem;
+  padding: 4rem 0;
   text-align: center;
 }
 

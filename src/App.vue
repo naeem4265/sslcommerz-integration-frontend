@@ -80,9 +80,7 @@ const router = useRouter();
 }
 
 main {
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0;
   width: 100%;
 }
 
