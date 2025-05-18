@@ -119,7 +119,7 @@
             <PButton 
               label="Back to Home" 
               icon="pi pi-home" 
-              @click="$router.push('/')" 
+              @click="router.push('/')" 
               class="p-button-lg p-mt-3"
             />
           </div>
@@ -152,8 +152,10 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import { useRouter } from 'vue-router'
 import axios from '@/plugins/axios'
 
+const router = useRouter()
 const currentStep = ref('form')
 const isProcessing = ref(false)
 const toast = useToast()

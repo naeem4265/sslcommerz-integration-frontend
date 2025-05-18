@@ -11,13 +11,13 @@
             label="Register" 
             icon="pi pi-user-plus" 
             class="p-button-success" 
-            @click="$router.push('/register')"
+            @click="router.push('/register')"
           />
           <PButton 
             label="Admin" 
             icon="pi pi-lock" 
             class="p-button-text" 
-            @click="$router.push('/login')"
+            @click="router.push('/login')"
           />
         </div>
       </div>
@@ -34,7 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import { PButton } from 'primevue/button';
+import PButton from 'primevue/button';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 </script>
 
 <style>

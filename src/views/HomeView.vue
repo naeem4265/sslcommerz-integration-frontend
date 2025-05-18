@@ -9,7 +9,7 @@
           label="Register Now" 
           icon="pi pi-user-plus" 
           class="p-button-lg p-button-rounded" 
-          @click="$router.push('/register')"
+          @click="router.push('/register')"
         />
       </div>
     </section>
@@ -75,7 +75,7 @@
           label="Register Now" 
           icon="pi pi-user-plus" 
           class="p-button-lg" 
-          @click="$router.push('/register')"
+          @click="router.push('/register')"
         />
       </div>
     </section>
@@ -83,7 +83,9 @@
 </template>
 
 <script setup lang="ts">
-// Component logic will go here
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 </script>
 
 <style scoped>
