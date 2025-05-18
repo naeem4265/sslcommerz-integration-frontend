@@ -1,30 +1,57 @@
 <template>
   <div class="app">
     <header class="header">
-      <nav class="nav-container">
-        <router-link to="/" class="logo">THPI Get Together</router-link>
+      <div class="nav-container">
+        <router-link to="/" class="logo">
+          <i class="pi pi-users mr-2"></i>
+          Event Registration
+        </router-link>
         <div class="nav-links">
-          <router-link to="/register" class="register-btn">Register Now</router-link>
+          <PButton 
+            label="Register" 
+            icon="pi pi-user-plus" 
+            class="p-button-success" 
+            @click="$router.push('/register')"
+          />
+          <PButton 
+            label="Admin" 
+            icon="pi pi-lock" 
+            class="p-button-text" 
+            @click="$router.push('/login')"
+          />
         </div>
-      </nav>
+      </div>
     </header>
 
-    <router-view />
+    <main>
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
-// Component logic will go here
+import { PButton } from 'primevue/button';
 </script>
 
 <style>
+@import 'primevue/resources/themes/lara-light-blue/theme.css';
+@import 'primevue/resources/primevue.min.css';
+@import 'primeicons/primeicons.css';
+
 .app {
   min-height: 100vh;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .header {
   background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1rem 2rem;
 }
 
@@ -37,28 +64,39 @@
 }
 
 .logo {
+  display: flex;
+  align-items: center;
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 600;
   color: #2c3e50;
   text-decoration: none;
+}
+
+.logo i {
+  margin-right: 0.5rem;
 }
 
 .nav-links {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
-.register-btn {
-  background-color: #42b983;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.3s;
+main {
+  padding: 1rem;
 }
 
-.register-btn:hover {
-  background-color: #3aa876;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
 }
 </style> 

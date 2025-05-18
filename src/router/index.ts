@@ -3,6 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import PaymentSuccess from '../views/PaymentSuccess.vue'
 import PaymentFail from '../views/PaymentFail.vue'
+import PaymentCancel from '../views/PaymentCancel.vue'
+import LoginView from '../views/LoginView.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,9 +33,35 @@ const router = createRouter({
     {
       path: '/payment/cancel',
       name: 'payment-cancel',
-      component: PaymentFail
+      component: PaymentCancel
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminDashboard,
+      //meta: { requiresAuth: true }
     }
   ]
+})
+
+// Navigation guard for protected routes
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('token') != null
+    if (!isLoggedIn) {
+      next({ name: 'login', query: { redirect: to.fullPath } })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 })
 
 export default router 

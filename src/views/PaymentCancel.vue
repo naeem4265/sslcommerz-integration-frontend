@@ -1,12 +1,11 @@
 <template>
   <div class="payment-result">
     <div class="container">
-      <div class="fail-message">
-        <i class="pi pi-times-circle"></i>
-        <h2>Payment Failed</h2>
-        <p>Sorry, your payment could not be processed.</p>
-        <p v-if="errorMessage" class="error-details">{{ errorMessage }}</p>
-        <p>Please try again or contact support if the problem persists.</p>
+      <div class="cancel-message">
+        <i class="pi pi-info-circle"></i>
+        <h2>Payment Cancelled</h2>
+        <p>You have cancelled the payment process.</p>
+        <p>Your registration is not complete until payment is made.</p>
         <div class="action-buttons">
           <router-link to="/register" class="retry-btn">Try Again</router-link>
           <router-link to="/" class="home-btn">Back to Home</router-link>
@@ -15,19 +14,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-const errorMessage = ref('')
-
-onMounted(() => {
-  // Get error message if available
-  errorMessage.value = route.query.error_message as string || ''
-})
-</script>
 
 <style scoped>
 .payment-result {
@@ -45,34 +31,25 @@ onMounted(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.fail-message {
+.cancel-message {
   text-align: center;
   padding: 2rem;
 }
 
-.fail-message i {
+.cancel-message i {
   font-size: 4rem;
-  color: #dc3545;
+  color: #ffc107;
   margin-bottom: 1rem;
 }
 
-.fail-message h2 {
+.cancel-message h2 {
   color: #2c3e50;
   margin-bottom: 1rem;
 }
 
-.fail-message p {
+.cancel-message p {
   color: #666;
   margin-bottom: 0.5rem;
-}
-
-.error-details {
-  margin: 1rem 0;
-  padding: 0.5rem 1rem;
-  background-color: #fff8f8;
-  border-left: 3px solid #dc3545;
-  text-align: left;
-  color: #842029;
 }
 
 .action-buttons {

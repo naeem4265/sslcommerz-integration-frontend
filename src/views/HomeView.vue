@@ -1,33 +1,82 @@
 <template>
-  <div class="home">
-    <section class="hero">
+  <div class="home-page">
+    <!-- Hero Section -->
+    <section class="hero-section">
       <div class="hero-content">
-        <h1>Welcome to THPI Get Together 2024</h1>
-        <p>Join us for an unforgettable reunion of Thakurgaon Polytechnic Institute alumni</p>
-        <router-link to="/register" class="cta-button">Register Now</router-link>
+        <h1>Welcome to Alumni Get Together 2024</h1>
+        <p>Join us for an unforgettable reunion with your classmates and friends</p>
+        <PButton 
+          label="Register Now" 
+          icon="pi pi-user-plus" 
+          class="p-button-lg p-button-rounded" 
+          @click="$router.push('/register')"
+        />
       </div>
     </section>
 
+    <!-- Event Info Section -->
     <section class="info-section">
       <div class="container">
-        <h2>About the Event</h2>
-        <div class="info-grid">
-          <div class="info-card">
-            <i class="pi pi-calendar"></i>
-            <h3>Date & Time</h3>
-            <p>Coming Soon</p>
-          </div>
-          <div class="info-card">
-            <i class="pi pi-map-marker"></i>
-            <h3>Location</h3>
-            <p>THPI Campus, Thakurgaon</p>
-          </div>
-          <div class="info-card">
-            <i class="pi pi-users"></i>
-            <h3>Activities</h3>
-            <p>Networking, Cultural Program, and More</p>
-          </div>
+        <div class="section-header">
+          <h2>About the Event</h2>
+          <div class="section-header-underline"></div>
         </div>
+        
+        <div class="event-cards">
+          <PCard class="event-card">
+            <template #header>
+              <div class="card-icon">
+                <i class="pi pi-calendar"></i>
+              </div>
+            </template>
+            <template #title>Date & Time</template>
+            <template #content>
+              <p>May 15, 2024</p>
+              <p>10:00 AM - 5:00 PM</p>
+            </template>
+          </PCard>
+
+          <PCard class="event-card">
+            <template #header>
+              <div class="card-icon">
+                <i class="pi pi-map-marker"></i>
+              </div>
+            </template>
+            <template #title>Location</template>
+            <template #content>
+              <p>Campus Auditorium</p>
+              <p>123 University Avenue</p>
+            </template>
+          </PCard>
+
+          <PCard class="event-card">
+            <template #header>
+              <div class="card-icon">
+                <i class="pi pi-users"></i>
+              </div>
+            </template>
+            <template #title>Activities</template>
+            <template #content>
+              <p>Networking</p>
+              <p>Cultural Program</p>
+              <p>Alumni Awards</p>
+            </template>
+          </PCard>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Don't Miss This Opportunity</h2>
+        <p>Register today to secure your spot at the reunion event of the year</p>
+        <PButton 
+          label="Register Now" 
+          icon="pi pi-user-plus" 
+          class="p-button-lg" 
+          @click="$router.push('/register')"
+        />
       </div>
     </section>
   </div>
@@ -38,14 +87,14 @@
 </script>
 
 <style scoped>
-.home {
-  min-height: calc(100vh - 64px);
+.home-page {
+  min-height: calc(100vh - 76px);
 }
 
-.hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-              url('/images/thpi-campus.jpg') center/cover;
-  height: 70vh;
+.hero-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+              url('/images/campus.jpg') center/cover;
+  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,33 +108,21 @@
 }
 
 .hero-content h1 {
-  font-size: 3rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
   margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 .hero-content p {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2vw, 1.25rem);
   margin-bottom: 2rem;
-}
-
-.cta-button {
-  display: inline-block;
-  background-color: #42b983;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.3s;
-}
-
-.cta-button:hover {
-  background-color: #3aa876;
+  opacity: 0.9;
 }
 
 .info-section {
-  padding: 4rem 2rem;
-  background-color: #f8f9fa;
+  padding: 5rem 2rem;
+  background-color: var(--surface-ground);
 }
 
 .container {
@@ -93,38 +130,96 @@
   margin: 0 auto;
 }
 
-.info-section h2 {
+.section-header {
   text-align: center;
   margin-bottom: 3rem;
-  color: #2c3e50;
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-}
-
-.info-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.info-card i {
+.section-header h2 {
   font-size: 2rem;
-  color: #42b983;
+  font-weight: 600;
+  color: var(--text-color);
   margin-bottom: 1rem;
 }
 
-.info-card h3 {
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
+.section-header-underline {
+  height: 3px;
+  width: 80px;
+  background-color: var(--primary-color);
+  margin: 0 auto;
 }
 
-.info-card p {
-  color: #666;
+.event-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.event-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: var(--primary-color);
+}
+
+.card-icon i {
+  font-size: 2rem;
+  color: white;
+}
+
+.p-card-title {
+  text-align: center;
+  font-weight: 600;
+}
+
+.p-card-content {
+  text-align: center;
+}
+
+.p-card-content p {
+  margin: 0.5rem 0;
+  color: var(--text-color-secondary);
+}
+
+.cta-section {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.cta-section p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 70vh;
+  }
+  
+  .info-section, .cta-section {
+    padding: 3rem 1.5rem;
+  }
 }
 </style> 

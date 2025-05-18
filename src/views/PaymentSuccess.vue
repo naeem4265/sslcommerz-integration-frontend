@@ -4,8 +4,11 @@
       <div class="success-message">
         <i class="pi pi-check-circle"></i>
         <h2>Payment Successful!</h2>
-        <p>Thank you for registering for the THPI Get Together event.</p>
+        <p>Thank you for registering for the Get Together event.</p>
         <p>We have sent you a confirmation email with the payment details.</p>
+        <p v-if="transactionId" class="transaction-info">
+          Transaction ID: <span class="tran-id">{{ transactionId }}</span>
+        </p>
         <router-link to="/" class="home-btn">Back to Home</router-link>
       </div>
     </div>
@@ -13,18 +16,27 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import axios from 'axios'
+import { ref, onMounted } from 'vue'
+import axios from '@/plugins/axios'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
+const transactionId = ref('')
 
 onMounted(async () => {
   try {
+    // Get transaction ID from route query
+    transactionId.value = route.query.tran_id as string || ''
+    
+    if (!transactionId.value) {
+      console.error('No transaction ID found')
+      return
+    }
+
     // Verify payment status with backend
-    await axios.post('your_backend_api/verify-payment', {
-      tran_id: route.query.tran_id
+    await axios.post('/api/verify-payment', {
+      transactionId: transactionId.value
     })
   } catch (error) {
     console.error('Payment verification failed:', error)
@@ -68,6 +80,19 @@ onMounted(async () => {
 .success-message p {
   color: #666;
   margin-bottom: 0.5rem;
+}
+
+.transaction-info {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f0faf5;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.tran-id {
+  font-weight: bold;
+  color: #2c3e50;
 }
 
 .home-btn {
