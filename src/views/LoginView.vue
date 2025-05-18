@@ -43,10 +43,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import axios from '@/plugins/axios'
+import { useAuthStore } from '@/stores'
 
 const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 
 const email = ref('')
 const password = ref('')
@@ -58,21 +59,37 @@ const handleLogin = async () => {
     errorMessage.value = ''
     isLoading.value = true
     
-    const response = await axios.post('/api/auth/login', {
+    console.log('Login attempt with:', { email: email.value })
+    
+    // Use the auth store to login
+    const response = await authStore.login({
       email: email.value,
       password: password.value
     })
     
-    // Store the token
-    const token = response.data.token
-    localStorage.setItem('token', token)
+    console.log('Login successful, token exists:', !!authStore.token)
+    console.log('Auth response data format:', {
+      hasAccessToken: !!response.data.accessToken,
+      hasRefreshToken: !!response.data.refreshToken,
+      hasUser: !!response.data.user
+    })
     
     // Redirect to admin dashboard or the original target
     const redirectPath = route.query.redirect as string || '/admin'
     router.push(redirectPath)
   } catch (error: any) {
     console.error('Login failed:', error)
-    errorMessage.value = error.response?.data?.message || 'Invalid email or password'
+    
+    // Show detailed error information in development
+    if (import.meta.env.MODE === 'development') {
+      console.error('Response status:', error.response?.status)
+      console.error('Response data:', error.response?.data)
+    }
+    
+    errorMessage.value = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Invalid email or password'
   } finally {
     isLoading.value = false
   }

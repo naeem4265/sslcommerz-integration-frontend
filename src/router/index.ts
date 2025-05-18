@@ -6,6 +6,7 @@ import PaymentFail from '../views/PaymentFail.vue'
 import PaymentCancel from '../views/PaymentCancel.vue'
 import LoginView from '../views/LoginView.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
+import { useAuthStore } from '@/stores'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,9 +53,10 @@ const router = createRouter({
 // Navigation guard for protected routes
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // Check if user is logged in
-    const isLoggedIn = localStorage.getItem('token') != null
-    if (!isLoggedIn) {
+    // This needs to be dynamic because we can't use the store at module scope
+    // (it would cause circular dependencies)
+    const authStore = useAuthStore()
+    if (!authStore.isLoggedIn) {
       next({ name: 'login', query: { redirect: to.fullPath } })
     } else {
       next()

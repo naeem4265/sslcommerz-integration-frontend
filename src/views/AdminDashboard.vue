@@ -2,7 +2,10 @@
   <div class="admin-dashboard">
     <div class="dashboard-header">
       <h1>Admin Dashboard</h1>
-      <button @click="logout" class="logout-btn">Logout</button>
+      <div class="header-buttons">
+        <button @click="debugAuth" class="debug-btn" v-if="isDevelopment">Debug Auth</button>
+        <button @click="logout" class="logout-btn">Logout</button>
+      </div>
     </div>
     
     <div class="payment-stats">
@@ -36,6 +39,8 @@
       
       <div v-else-if="error" class="error-container">
         <p>{{ error }}</p>
+        <p v-if="error.includes('401')">Authentication failed. Please <router-link to="/login">login again</router-link>.</p>
+        <p v-else-if="error.includes('404')">The API endpoint could not be found. Please check your server configuration.</p>
         <button @click="fetchPayments" class="retry-btn">Retry</button>
       </div>
       
@@ -78,7 +83,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from '@/plugins/axios'
+import { PaymentService } from '@/services/api.service'
+import API_ROUTES from '@/constants/apiRoutes'
+import { useAuthStore } from '@/stores'
+import axios from 'axios'
 
 interface Payment {
   id: string
@@ -93,10 +101,14 @@ interface Payment {
 }
 
 const router = useRouter()
+const authStore = useAuthStore()
 const payments = ref<Payment[]>([])
 const isLoading = ref(true)
 const error = ref('')
 const searchQuery = ref('')
+
+// Environment check for debug functionality
+const isDevelopment = import.meta.env.MODE === 'development'
 
 // Computed property for filtered payments
 const filteredPayments = computed(() => {
@@ -121,34 +133,115 @@ const fetchPayments = async () => {
   error.value = ''
   
   try {
-    // Get the token from localStorage
-    const token = localStorage.getItem('token')
+    // Debug authentication status
+    console.log('Auth check before fetching payments:')
+    console.log('- Store logged in:', authStore.isLoggedIn)
+    console.log('- Store token:', authStore.token ? 'exists' : 'missing')
+    console.log('- LocalStorage token:', localStorage.getItem('token') ? 'exists' : 'missing')
     
-    if (!token) {
+    // Check if authenticated
+    if (!authStore.isLoggedIn) {
+      console.error('No authentication token found')
       router.push('/login')
       return
     }
     
-    // Configure authorization header
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+    // The API endpoint has been configured to use registration endpoint
+    console.log('Fetching payments with endpoint:', API_ROUTES.PAYMENTS.LIST)
     
-    const response = await axios.get('/api/payments', config)
+    // Force token refresh in headers
+    const token = authStore.token
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined
+    
+    // Call the service method with additional parameters if needed
+    const response = await axios.get(API_ROUTES.PAYMENTS.LIST, {
+      params: {
+        admin: true,
+        type: 'all'
+      },
+      headers
+    })
+    
+    console.log('Payment response:', response)
     payments.value = response.data
   } catch (err: any) {
     console.error('Failed to fetch payments:', err)
+    console.error('Error details:', {
+      message: err.message,
+      status: err.response?.status,
+      statusText: err.response?.statusText,
+      data: err.response?.data
+    })
     error.value = err.response?.data?.message || 'Failed to load payment data'
     
-    // If unauthorized, redirect to login
+    // Handle 401 errors
     if (err.response?.status === 401) {
-      localStorage.removeItem('token')
+      authStore.clearAuthData()
       router.push('/login')
     }
   } finally {
     isLoading.value = false
+  }
+}
+
+// Debug function to check auth state
+const debugAuth = () => {
+  console.group('Auth Debug Info')
+  console.log('Auth store state:', {
+    isLoggedIn: authStore.isLoggedIn,
+    hasToken: !!authStore.token,
+    hasRefreshToken: !!authStore.refreshToken
+  })
+  console.log('LocalStorage:', {
+    token: localStorage.getItem('token'),
+    refreshToken: localStorage.getItem('refreshToken')
+  })
+  
+  // Try a direct API call to test authentication
+  const token = authStore.token || localStorage.getItem('token')
+  if (token) {
+    console.log('Testing API call with token')
+    axios.get(API_ROUTES.PAYMENTS.LIST, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { admin: true, test: true }
+    })
+      .then(response => {
+        console.log('Test API call successful:', response.status, response.statusText)
+        console.log('Response data:', response.data)
+      })
+      .catch(error => {
+        console.error('Test API call failed:', error.message)
+        console.error('Response:', error.response?.status, error.response?.statusText)
+        console.error('Response data:', error.response?.data)
+        
+        // Try login endpoint to see response format
+        console.log('Testing login endpoint response format...')
+        axios.post(API_ROUTES.AUTH.LOGIN(), {
+          email: 'admin@example.com',
+          password: 'test' // Just a test, will fail but shows response format
+        })
+          .then(response => {
+            console.log('Login response format:', {
+              hasAccessToken: !!response.data.accessToken,
+              hasRefreshToken: !!response.data.refreshToken,
+              hasUser: !!response.data.user,
+              fullResponse: response.data
+            })
+          })
+          .catch(loginError => {
+            console.log('Login error response format:', loginError.response?.data)
+          })
+      })
+  } else {
+    console.error('No token available for testing')
+  }
+  
+  console.groupEnd()
+  
+  // Try to refresh auth data
+  if (token && !authStore.token) {
+    console.log('Refreshing auth store from localStorage')
+    authStore.setAuthData({ token })
   }
 }
 
@@ -165,13 +258,20 @@ const formatDate = (dateString: string) => {
 }
 
 // Logout function
-const logout = () => {
-  localStorage.removeItem('token')
-  router.push('/login')
+const logout = async () => {
+  await authStore.logout()
 }
 
 // Load data when component mounts
 onMounted(() => {
+  // Verify authentication before fetching data
+  if (!authStore.isLoggedIn) {
+    console.error('Not authenticated, redirecting to login')
+    router.push('/login')
+    return
+  }
+  
+  console.log('Admin dashboard mounted, fetching payments')
   fetchPayments()
 })
 </script>
@@ -195,8 +295,12 @@ onMounted(() => {
   color: #2c3e50;
 }
 
-.logout-btn {
-  background-color: #dc3545;
+.header-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.logout-btn, .debug-btn {
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -205,8 +309,20 @@ onMounted(() => {
   transition: background-color 0.3s;
 }
 
+.logout-btn {
+  background-color: #dc3545;
+}
+
 .logout-btn:hover {
   background-color: #c82333;
+}
+
+.debug-btn {
+  background-color: #17a2b8;
+}
+
+.debug-btn:hover {
+  background-color: #138496;
 }
 
 .payment-stats {

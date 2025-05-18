@@ -153,7 +153,7 @@
 import { ref, reactive, computed } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
-import axios from '@/plugins/axios'
+import { PaymentService } from '@/services/api.service'
 
 const router = useRouter()
 const currentStep = ref('form')
@@ -217,7 +217,7 @@ const processPayment = async () => {
     }
 
     // Call backend API to initiate payment
-    const response = await axios.post('/api/v1/payment/initiate', {
+    const response = await PaymentService.initiate({
       ...paymentData,
       registration: formData
     })

@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import axios from '@/plugins/axios'
 import { useRoute, useRouter } from 'vue-router'
+import { PaymentService } from '@/services/api.service'
 
 const route = useRoute()
 const router = useRouter()
@@ -35,9 +35,7 @@ onMounted(async () => {
     }
 
     // Verify payment status with backend
-    await axios.post('/api/verify-payment', {
-      transactionId: transactionId.value
-    })
+    await PaymentService.verify(transactionId.value)
   } catch (error) {
     console.error('Payment verification failed:', error)
     router.push('/payment/fail')
