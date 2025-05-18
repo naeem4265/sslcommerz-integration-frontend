@@ -1,46 +1,57 @@
-# THPI Get Together Frontend
+# Event Registration System Frontend
 
-This is the frontend application for the THPI Get Together event registration system. It's built with Vue 3, TypeScript, and PrimeVue.
+This is the frontend application for the Event Registration system. It's built with Vue 3, TypeScript, and PrimeVue.
 
 ## Features
 
-- Beautiful landing page with THPI campus showcase
+- Beautiful landing page with campus showcase
 - User-friendly registration form
-- Multiple payment method integration (bKash, Nagad, Rocket, DBBL)
+- Integrated payment system with SSLCommerz
+- Admin dashboard for managing registrations
 - Responsive design for all devices
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
-- npm (v7 or higher)
+- Node.js (v16 or newer)
+- npm or yarn
 
-## Setup
+## Getting Started
 
-1. Clone the repository:
+Clone the repository and install dependencies:
+
 ```bash
-git clone <repository-url>
-cd thpi-get-together-frontend
-```
-
-2. Install dependencies:
-```bash
+git clone https://github.com/username/event-registration-frontend.git
+cd event-registration-frontend
 npm install
 ```
 
-3. Create a `.env` file in the root directory and add your environment variables:
-```env
-VITE_API_URL=http://localhost:3000
+Create a `.env` file in the project root with the following variables:
+
+```
+VITE_API_URL=http://localhost:3002
 ```
 
-4. Start the development server:
+Start the development server:
+
 ```bash
 npm run dev
 ```
 
-5. Build for production:
+## Building for Production
+
 ```bash
 npm run build
 ```
+
+## Technology Stack
+
+- Vue 3 with Composition API
+- TypeScript
+- Vite
+- PrimeVue Components
+- Vue Router
+- Pinia for state management
+- Axios for API communication
 
 ## Project Structure
 

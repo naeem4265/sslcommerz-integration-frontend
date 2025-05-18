@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <header class="header">
+    <header class="header" v-if="!isAdminRoute">
       <div class="nav-container">
         <router-link to="/" class="logo">
           <i class="pi pi-users mr-2"></i>
@@ -29,9 +29,16 @@
 
 <script setup lang="ts">
 import PButton from 'primevue/button';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
 
 const router = useRouter();
+const route = useRoute();
+
+// Check if current route is admin route
+const isAdminRoute = computed(() => {
+  return route.path.includes('/admin') || route.path.includes('/login');
+});
 </script>
 
 <style>
