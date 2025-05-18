@@ -105,7 +105,7 @@ const router = useRouter()
 }
 
 .hero-content {
-  max-width: 1000px;
+  max-width: 800px;
   padding: 2rem;
 }
 
