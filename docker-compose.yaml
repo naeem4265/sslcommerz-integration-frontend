@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "8001:80"
+    networks:
+      - web
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        # - linux/arm64
+    ports:
+      - "8081:3030"
+    networks:
+      - web
+networks:
+  web:
+    driver: bridge
+
