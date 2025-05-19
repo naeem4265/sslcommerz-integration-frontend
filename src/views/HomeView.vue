@@ -18,7 +18,7 @@
     <section class="info-section">
       <div class="container">
         <div class="section-header">
-          <h2>About the Event</h2>
+        <h2>About the Event</h2>
           <div class="section-header-underline"></div>
         </div>
         
@@ -26,8 +26,8 @@
           <PCard class="event-card">
             <template #header>
               <div class="card-icon">
-                <i class="pi pi-calendar"></i>
-              </div>
+            <i class="pi pi-calendar"></i>
+          </div>
             </template>
             <template #title>Date & Time</template>
             <template #content>
@@ -39,8 +39,8 @@
           <PCard class="event-card">
             <template #header>
               <div class="card-icon">
-                <i class="pi pi-map-marker"></i>
-              </div>
+            <i class="pi pi-map-marker"></i>
+          </div>
             </template>
             <template #title>Location</template>
             <template #content>
@@ -52,8 +52,8 @@
           <PCard class="event-card">
             <template #header>
               <div class="card-icon">
-                <i class="pi pi-users"></i>
-              </div>
+            <i class="pi pi-users"></i>
+          </div>
             </template>
             <template #title>Activities</template>
             <template #content>
@@ -222,8 +222,8 @@ const router = useRouter()
 @media (max-width: 768px) {
   .hero-section {
     height: 70vh;
-  }
-  
+}
+
   .info-section, .cta-section {
     padding: 3rem 1.5rem;
   }
