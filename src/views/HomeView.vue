@@ -2,7 +2,7 @@
   <div class="home">
     <section class="hero">
       <div class="hero-content">
-        <h1>Welcome to THPI Get Together 2024</h1>
+        <h1>Welcome to THPI Get Together 2025</h1>
         <p>Join us for an unforgettable reunion of Thakurgaon Polytechnic Institute alumni</p>
         <router-link to="/register" class="cta-button">Register Now</router-link>
       </div>
