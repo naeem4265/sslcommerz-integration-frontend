@@ -3,7 +3,7 @@
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-content">
-        <h1>Welcome to Alumni Get Together 2025</h1>
+        <h1>Welcome to Alumni Get Together 2025(v2)</h1>
         <p>Join us for an unforgettable reunion with your classmates and friends</p>
         <PButton 
           label="Register Now" 
